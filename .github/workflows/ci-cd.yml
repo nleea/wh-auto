@@ -24,3 +24,4 @@ jobs:
       - name: Deploy to server
         run: |
           ssh root@${{ secrets.SERVER_IP }} 'bash -s' < ./setup.sh
+          
