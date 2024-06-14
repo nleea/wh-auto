@@ -6,12 +6,13 @@ REPO_URL="https://github.com/nleea/wh-auto.git"
 BRANCH="main"
 
 # Verifica si el directorio del proyecto existe
-if [ ! -d "$SCRIPT_DIR" ]; then
+if [ ! -d "$SCRIPT_DIR/app" ]; then
     echo "El directorio no existe. Clonando el repositorio..."
-    git clone -b $BRANCH $REPO_URL $SCRIPT_DIR
+    git clone -b $BRANCH $REPO_URL "$SCRIPT_DIR/app"
+    cd "$SCRIPT_DIR/app"
 else
     echo "El directorio existe. Actualizando el repositorio..."
-    cd $SCRIPT_DIR
+    cd "$SCRIPT_DIR/app"
     git pull origin $BRANCH
 fi
 
