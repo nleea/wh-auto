@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 app = FastAPI()
 
 
-@app.get("")
+@app.get("/")
 def main():
     return "Ok"
 
