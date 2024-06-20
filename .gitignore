@@ -1,2 +1,8 @@
 .env
 Pipfile
+__pycache__
+.env
+log.log
+log
+alembic
+alembic.ini

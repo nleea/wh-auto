@@ -1,0 +1,26 @@
+name: autoapp
+
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRES_DB: autoapp
+      POSTGRES_USER: autoapp
+      POSTGRES_PASSWORD: autoapp
+    ports:
+      - 5432:5432
+    networks:
+      - postgres-network
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - postgres-network
+
+networks:
+  postgres-network:
