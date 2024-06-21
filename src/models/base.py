@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional, Any, TypeAlias
+from typing import Optional, Any
 from uuid import UUID
 
 from pydantic.main import BaseModel
@@ -10,7 +10,7 @@ class GenericResponseModel(BaseModel):
     api_id: Optional[str] = None
     error: Optional[str] = None
     message: Optional[str] = None
-    data: Any
+    data: Any = None
     status_code: Optional[int] = None
 
 
