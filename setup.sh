@@ -22,3 +22,7 @@ source app1/bin/activate
 
 # Instalar las dependencias
 pip install -r requirements.txt
+
+
+# alembic revision --autogenerate -m "Add User model"
+# alembic upgrade head

@@ -1,8 +1,21 @@
-from sqlalchemy import Column, String
+from sqlalchemy import Column, Integer, String, ForeignKey
 
 from sqlalchemy.orm import Session
 from data_adapter.db import DBBase, DBBaseModel
 from models.user import UserModel, UserStatus, UserRole
+from sqlalchemy.orm import relationship
+from data_adapter.base_tables import Gender
+
+class Person(DBBase, DBBaseModel):
+    __tablename__ = "person"
+
+    name = Column(String(255), nullable=False)
+    last_name = Column(String(255), nullable=False)
+    age = Column(String(255), nullable=False)
+    phone_number = Column(String(255), nullable=False)
+    gender_id = Column(Integer, ForeignKey("genders.id"))
+    gender = relationship("Gender")
+
 
 class User(DBBase, DBBaseModel):
     __tablename__ = "user"

@@ -4,6 +4,7 @@ from uuid import UUID
 
 from pydantic.main import BaseModel
 
+
 class GenericResponseModel(BaseModel):
     """Generic response model for all responses"""
 

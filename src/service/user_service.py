@@ -3,7 +3,6 @@ from models.base import GenericResponseModel
 from models.user import UserInsertModel
 from utils.password_hasher import PasswordHasher
 from data_adapter.user import User
-from logger import logger
 
 class UserService:
     MSG_USER_CREATED_SUCCESS = "User created successfully"
