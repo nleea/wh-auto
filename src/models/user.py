@@ -3,7 +3,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, field_validator, EmailStr
 
-from models.base import DBBaseModel
+from models import DBBaseModel
 
 
 class UserRole(str, Enum):

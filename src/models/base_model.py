@@ -12,7 +12,7 @@ class GenderInsertModel(BaseModel):
     name_gender: str
 
     def create_db_entity(self):
-        from data_adapter.base_tables import Gender
+        from data_adapter import Gender
 
         dict_to_build_db_entity = self.model_dump()
         return Gender(**dict_to_build_db_entity)
@@ -36,7 +36,7 @@ class RolInsertModel(BaseModel):
     name_rol: str
 
     def create_db_entity(self):
-        from data_adapter.base_tables import Rol
+        from data_adapter import Rol
 
         dict_to_build_db_entity = self.model_dump()
         return Rol(**dict_to_build_db_entity)

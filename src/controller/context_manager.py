@@ -8,7 +8,7 @@ from data_adapter.db import get_db
 from data_adapter.user import User
 from logger import logger
 from models.user import UserTokenData, UserModel, UserStatus
-from utils.exceptions import AuthException
+from utils import AuthException
 
 # we are using context variables to store request level context , as FASTAPI
 # does not provide request context out of the box

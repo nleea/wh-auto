@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String
 from data_adapter.db import DBBase, DBBaseModel
-from models.base_model import GenderModel, RolModel
+from models import GenderModel, RolModel
 from sqlalchemy.orm import Session
 from sqlalchemy.orm import relationship
 
@@ -15,7 +15,7 @@ class Gender(DBBase, DBBaseModel):
 
     @classmethod
     def create_gender(cls, gender) -> GenderModel:
-        from controller.context_manager import get_db_session
+        from controller import get_db_session
 
         db: Session = get_db_session()
         db.add(gender)
@@ -39,7 +39,7 @@ class Rol(DBBase, DBBaseModel):
 
     @classmethod
     def create_rol(cls, rol) -> RolModel:
-        from controller.context_manager import get_db_session
+        from controller import get_db_session
 
         db: Session = get_db_session()
         db.add(rol)

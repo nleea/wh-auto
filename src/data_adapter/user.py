@@ -6,6 +6,7 @@ from models.user import UserModel, UserStatus, UserRole
 from sqlalchemy.orm import relationship
 from data_adapter.base_tables import Gender
 
+
 class Person(DBBase, DBBaseModel):
     __tablename__ = "person"
 
@@ -33,7 +34,7 @@ class User(DBBase, DBBaseModel):
 
     @classmethod
     def create_user(cls, user) -> UserModel:
-        from controller.context_manager import get_db_session
+        from controller import get_db_session
 
         db: Session = get_db_session()
         db.add(user)
@@ -52,7 +53,7 @@ class User(DBBase, DBBaseModel):
 
     @classmethod
     def get_active_user_by_email(cls, email) -> UserModel:
-        from controller.context_manager import get_db_session
+        from controller import get_db_session
 
         db = get_db_session()
         user = (
@@ -70,7 +71,7 @@ class User(DBBase, DBBaseModel):
     def update_user_by_uuid(
         cls, user_uuid: str, update_dict: dict, user_role: UserRole = None
     ) -> int:
-        from controller.context_manager import get_db_session
+        from controller import get_db_session
 
         db = get_db_session()
         update_query = db.query(cls).filter(
@@ -81,3 +82,12 @@ class User(DBBase, DBBaseModel):
         updates = update_query.update(update_dict)
         db.flush()
         return updates
+
+    @classmethod
+    def list_user(cls):
+        from controller import get_db_session
+
+        db = get_db_session()
+        users = db.query(cls).all()
+        
+        return [x.__to_model() for x in users]

@@ -1,7 +1,6 @@
 import http
-from models.base import GenericResponseModel
-from models.base_model import RolInsertModel
-from data_adapter.base_tables import Rol
+from models import GenericResponseModel, RolInsertModel
+from data_adapter import Rol
 
 
 class RolService:

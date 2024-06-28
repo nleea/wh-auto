@@ -1,13 +1,14 @@
 import http
-from models.base import GenericResponseModel
-from models.user import UserInsertModel
-from utils.password_hasher import PasswordHasher
-from data_adapter.user import User
+from models import GenericResponseModel, UserInsertModel
+from utils import PasswordHasher
+from data_adapter import User
+
 
 class UserService:
     MSG_USER_CREATED_SUCCESS = "User created successfully"
     MSG_USER_LOGIN_SUCCESS = "Login successful"
     MSG_USER_SUSPENDED = "User is suspended successfully"
+    MSG_USER_OK = "Ok"
 
     ERROR_INVALID_CREDENTIALS = "Invalid credentials"
     ERROR_USER_NOT_FOUND = "User not found"
@@ -24,4 +25,14 @@ class UserService:
             status_code=http.HTTPStatus.CREATED,
             message=cls.MSG_USER_CREATED_SUCCESS,
             data=user_data.build_response_model(),
+        )
+
+    @classmethod
+    def list_user(cls) -> GenericResponseModel:
+        users = User.list_user()
+
+        return GenericResponseModel(
+            status_code=http.HTTPStatus.OK,
+            message=cls.MSG_USER_OK,
+            data=[x.build_response_model() for x in users],
         )

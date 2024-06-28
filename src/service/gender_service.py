@@ -1,7 +1,6 @@
 import http
-from models.base import GenericResponseModel
-from models.base_model import GenderInsertModel
-from data_adapter.base_tables import Gender
+from models import GenericResponseModel, GenderInsertModel
+from data_adapter import Gender
 
 
 class GenderService:
