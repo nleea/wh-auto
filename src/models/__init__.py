@@ -3,7 +3,8 @@ from models.base_model import (
     GenderInsertModel,
     GenderModel,
     RolInsertModel,
-    RolModel
+    RolModel,
+    RolResponseModel
 )
 from models.base import GenericResponseModel, DBBaseModel
 from models.user import (
@@ -16,7 +17,7 @@ from models.user import (
     UserTokenData,
     TokenType,
     UserTokenResponseModel,
-    UserModel,
+    UserModel
 )
 
 __all__ = [
@@ -36,5 +37,6 @@ __all__ = [
     "TokenType",
     "UserTokenResponseModel",
     "UserModel",
-    "RolModel"
+    "RolModel",
+    "RolResponseModel"
 ]

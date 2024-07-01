@@ -4,6 +4,9 @@ from pydantic import BaseModel
 
 class GenderResponseModel(BaseModel):
     name_gender: str
+    
+    class Config:
+        from_attributes = True
 
 
 class GenderInsertModel(BaseModel):
@@ -44,6 +47,9 @@ class RolInsertModel(BaseModel):
 
 class RolResponseModel(BaseModel):
     name_rol: str
+    
+    class Config:
+        from_attributes = True
 
 
 class RolModel(DBBaseModel):

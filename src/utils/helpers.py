@@ -10,9 +10,7 @@ from models.base import GenericResponseModel
 def build_api_response(generic_response: GenericResponseModel) -> JSONResponse:
     from controller import context_api_id, context_log_meta
     
-    
-    try:
-        
+    try:    
         if "detail" in generic_response:
             generic_response["api_id"] = (
                 context_api_id.get() if context_api_id.get() else str(uuid.uuid4())
@@ -27,12 +25,12 @@ def build_api_response(generic_response: GenericResponseModel) -> JSONResponse:
             
             return res
 
-        if "api_id" not in generic_response and not generic_response["api_id"]:
+        if "api_id" not in generic_response or not generic_response["api_id"]:
             generic_response["api_id"] = (
                 context_api_id.get() if context_api_id.get() else str(uuid.uuid4())
             )
 
-        if "status_code" not in generic_response and not generic_response["status_code"]:
+        if "status_code" not in generic_response or not generic_response["status_code"]:
             generic_response["status_code"] = (
                 http.HTTPStatus.OK
                 if not generic_response["error"]

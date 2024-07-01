@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from data_adapter.db import DBBase, DBBaseModel
 from models.user import UserModel, UserStatus, UserRole
 from sqlalchemy.orm import relationship
-from data_adapter.base_tables import Gender
+from data_adapter.base_tables import Gender, Rol
 
 
 class Person(DBBase, DBBaseModel):
@@ -24,7 +24,10 @@ class User(DBBase, DBBaseModel):
     first_name = Column(String(255), nullable=False)
     last_name = Column(String(255), nullable=False)
     email = Column(String(255), nullable=False)
-    role = Column(String(20), nullable=False)
+    role_id = Column(Integer, ForeignKey("rol.id"))
+    rol = relationship("Rol")
+    person_id = Column(Integer, ForeignKey("person.id"))
+    person = relationship("Person")
     password_hash = Column(String(255), nullable=False)
     status = Column(String(20), nullable=False)
 
@@ -89,5 +92,5 @@ class User(DBBase, DBBaseModel):
 
         db = get_db_session()
         users = db.query(cls).all()
-        
+
         return [x.__to_model() for x in users]

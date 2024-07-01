@@ -3,7 +3,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, field_validator, EmailStr
 
-from models import DBBaseModel
+from models import DBBaseModel, RolModel, RolResponseModel
 
 
 class UserRole(str, Enum):
@@ -34,7 +34,7 @@ class UserResponseModel(BaseModel):
     first_name: str
     last_name: str
     email: EmailStr
-    role: UserRole = UserRole.CUSTOMER
+    rol: RolResponseModel
 
 
 class UserBaseModel(UserResponseModel):

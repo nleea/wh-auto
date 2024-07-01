@@ -2,7 +2,7 @@ from sqlalchemy import Column, String
 from data_adapter.db import DBBase, DBBaseModel
 from models import GenderModel, RolModel
 from sqlalchemy.orm import Session
-from sqlalchemy.orm import relationship
+
 
 class Gender(DBBase, DBBaseModel):
     __tablename__ = "genders"
@@ -27,6 +27,15 @@ class Gender(DBBase, DBBaseModel):
         gender = super().get_by_id(id)
         return gender.__to_model() if gender else None
 
+    @classmethod
+    def list_genders(cls) -> list[GenderModel]:
+        from controller import get_db_session
+
+        db: Session = get_db_session()
+        gender_list = db.query(cls).all()
+
+        return [x.__to_model() for x in gender_list]
+
 
 class Rol(DBBase, DBBaseModel):
     __tablename__ = "rol"
@@ -50,3 +59,12 @@ class Rol(DBBase, DBBaseModel):
     def get_by_id(cls, id) -> RolModel:
         rol = super().get_by_id(id)
         return rol.__to_model() if rol else None
+
+    @classmethod
+    def list_roles(cls) -> list[RolModel]:
+        from controller import get_db_session
+
+        db: Session = get_db_session()
+        roles = db.query(cls).all()
+
+        return [x.__to_model() for x in roles]

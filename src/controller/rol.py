@@ -18,3 +18,11 @@ rol_router = APIRouter(prefix="/v1/rol", tags=["rol"])
 async def create_rol(rol: RolInsertModel, _=Depends(build_request_context)):
     response: GenericResponseModel = RolService.create_rol(rol=rol)
     return response
+
+
+@rol_router.get(
+    "/list", status_code=http.HTTPStatus.OK, response_model=GenericResponseModel
+)
+async def list_rol(_=Depends(build_request_context)):
+    response: GenericResponseModel = RolService.list_rol()
+    return response
