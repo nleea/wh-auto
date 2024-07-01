@@ -3,6 +3,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import Session
 from data_adapter.db import DBBase, DBBaseModel
 from models.user import UserModel, UserStatus, UserRole
+from models.person import PersonInsertModel, PersonModel
 from sqlalchemy.orm import relationship
 from data_adapter.base_tables import Gender, Rol
 
@@ -17,12 +18,24 @@ class Person(DBBase, DBBaseModel):
     gender_id = Column(Integer, ForeignKey("genders.id"))
     gender = relationship("Gender")
 
+    def __to_model(self) -> PersonModel:
+        """converts db orm object to pydantic model"""
+        return PersonModel.model_validate(self)
+
+    @classmethod
+    def create_person(cls, person: PersonInsertModel) -> PersonModel:
+        from controller import get_db_session
+
+        person = person.create_db_entity()
+        db: Session = get_db_session()
+        db.add(person)
+        db.flush()
+        return person.__to_model()
+
 
 class User(DBBase, DBBaseModel):
     __tablename__ = "user"
 
-    first_name = Column(String(255), nullable=False)
-    last_name = Column(String(255), nullable=False)
     email = Column(String(255), nullable=False)
     role_id = Column(Integer, ForeignKey("rol.id"))
     rol = relationship("Rol")
@@ -42,6 +55,7 @@ class User(DBBase, DBBaseModel):
         db: Session = get_db_session()
         db.add(user)
         db.flush()
+
         return user.__to_model()
 
     @classmethod

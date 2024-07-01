@@ -3,7 +3,8 @@ from uuid import UUID
 
 from pydantic import BaseModel, field_validator, EmailStr
 
-from models import DBBaseModel, RolModel, RolResponseModel
+from models import DBBaseModel, RolResponseModel
+from models.person import PersonInsertModel, PersonModel, PersonResponseModel
 
 
 class UserRole(str, Enum):
@@ -31,10 +32,17 @@ class UserTokenData(BaseModel):
 class UserResponseModel(BaseModel):
     """User model for response"""
 
-    first_name: str
-    last_name: str
     email: EmailStr
-    rol: RolResponseModel
+    rol: RolResponseModel | int
+    person: PersonResponseModel | None | int = None
+
+
+class UserResponseModelBD(BaseModel):
+    """User model for response"""
+
+    email: EmailStr
+    rol: RolResponseModel | int
+    person: PersonModel
 
 
 class UserBaseModel(UserResponseModel):
@@ -43,7 +51,7 @@ class UserBaseModel(UserResponseModel):
     status: UserStatus = UserStatus.ACTIVE
 
 
-class UserInsertModel(UserBaseModel):
+class UserInsertModel(UserBaseModel, PersonInsertModel):
     """User model for insert"""
 
     password: str
@@ -88,8 +96,24 @@ class UserInsertModel(UserBaseModel):
         """
         from data_adapter.user import User
 
+        """ Person field """
+
         dict_to_build_db_entity = self.model_dump()
+        dict_to_build_db_entity.pop("name")
+        dict_to_build_db_entity.pop("last_name")
+        dict_to_build_db_entity.pop("age")
+        dict_to_build_db_entity.pop("phone_number")
+        dict_to_build_db_entity.pop("gender")
+
+        """ User Field """
+
         dict_to_build_db_entity["password_hash"] = password_hash
+        dict_to_build_db_entity["role_id"] = self.rol
+        dict_to_build_db_entity["person_id"] = self.person
+
+        dict_to_build_db_entity.pop("person")
+        dict_to_build_db_entity.pop("rol")
+
         dict_to_build_db_entity.pop("password")
         return User(**dict_to_build_db_entity)
 
@@ -98,6 +122,7 @@ class UserModel(UserBaseModel, DBBaseModel):
     """User model"""
 
     password_hash: str
+    person: PersonModel
 
     class Config:
         from_attributes = True
