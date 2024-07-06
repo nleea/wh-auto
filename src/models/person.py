@@ -5,7 +5,7 @@ from models import GenderModel, GenderResponseModel
 
 class PersonResponseModel(BaseModel):
     """Response Person Model"""
-
+    
     name: str
     last_name: str
     age: int

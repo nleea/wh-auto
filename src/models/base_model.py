@@ -1,8 +1,9 @@
 from models.base import DBBaseModel
 from pydantic import BaseModel
-
+from typing import Optional
 
 class GenderResponseModel(BaseModel):
+    id: Optional[int]
     name_gender: str
     
     class Config:
@@ -46,6 +47,7 @@ class RolInsertModel(BaseModel):
 
 
 class RolResponseModel(BaseModel):
+    id: Optional[int]
     name_rol: str
     
     class Config:

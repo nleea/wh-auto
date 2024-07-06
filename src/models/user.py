@@ -4,7 +4,10 @@ from uuid import UUID
 from pydantic import BaseModel, field_validator, EmailStr
 
 from models import DBBaseModel, RolResponseModel
+from models.resource import ResourceResponse
 from models.person import PersonInsertModel, PersonModel, PersonResponseModel
+
+from typing import Any
 
 
 class UserRole(str, Enum):
@@ -12,6 +15,7 @@ class UserRole(str, Enum):
 
     ADMIN = "admin"
     CUSTOMER = "customer"
+    TEST = "TEST"
 
 
 class UserStatus(str, Enum):
@@ -157,5 +161,6 @@ class UserTokenResponseModel(BaseModel):
     user_uuid: UUID
     access_token: str
     token_type: TokenType = TokenType.bearer
-    user_role: UserRole
+    user_role: Any
     user_status: UserStatus
+    resources: list[ResourceResponse] | None = []

@@ -1,8 +1,7 @@
 from sqlalchemy import Column, String
 from data_adapter.db import DBBase, DBBaseModel
 from models import GenderModel, RolModel
-from sqlalchemy.orm import Session
-
+from sqlalchemy.orm import Session, relationship
 
 class Gender(DBBase, DBBaseModel):
     __tablename__ = "genders"
@@ -41,6 +40,7 @@ class Rol(DBBase, DBBaseModel):
     __tablename__ = "rol"
 
     name_rol = Column(String(100), nullable=False)
+    rol_resources = relationship("RolResources", back_populates="rol")
 
     def __to_model(self) -> RolModel:
         """converts db orm object to pydantic model"""

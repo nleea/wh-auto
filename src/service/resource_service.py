@@ -1,29 +1,29 @@
 import http
-from models import GenericResponseModel, GenderInsertModel
-from data_adapter import Gender
+from models import GenericResponseModel, ResourceInsertModel
+from data_adapter import Resources
 
 
-class GenderService:
+class ResourceService:
     MSG_CREATED_SUCCESS = "Created successfully"
     MSG_SUSPENDED = "Suspended successfully"
     MSG_OK = "Ok"
 
     ERROR_INVALID_CREDENTIALS = "Invalid credentials"
     ERROR_NOT_FOUND = "Not found"
+
     ERROR_SERVICE = "There was a erorr"
-    
 
     @classmethod
-    def create_gender(cls, gender: GenderInsertModel) -> GenericResponseModel:
+    def create_resource(cls, resource: ResourceInsertModel) -> GenericResponseModel:
 
         try:
-            gender_to_create = gender.create_db_entity()
-            gender_data = Gender.create_gender(gender_to_create)
+            resource_to_create = resource.create_db_entity()
+            resource_data = Resources.create_resource(resource_to_create)
 
             return GenericResponseModel(
                 status_code=http.HTTPStatus.CREATED,
                 message=cls.MSG_CREATED_SUCCESS,
-                data=gender_data.build_response_model(),
+                data=resource_data.build_response_model(),
             )
         except Exception as e:
             return GenericResponseModel(
@@ -34,15 +34,14 @@ class GenderService:
             )
 
     @classmethod
-    def list_gender(cls) -> GenericResponseModel:
-
+    def list_resources(cls) -> GenericResponseModel:
         try:
-            list_gender = Gender.list_genders()
+            rol_list = Resources.list_resources()
 
             return GenericResponseModel(
                 status_code=http.HTTPStatus.OK,
                 message=cls.MSG_OK,
-                data=[x.build_response_model() for x in list_gender],
+                data=[x.build_response_model() for x in rol_list],
             )
         except Exception as e:
             return GenericResponseModel(

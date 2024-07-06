@@ -4,7 +4,7 @@ from models.base_model import (
     GenderModel,
     RolInsertModel,
     RolModel,
-    RolResponseModel
+    RolResponseModel,
 )
 from models.person import PersonInsertModel, PersonModel
 from models.base import GenericResponseModel, DBBaseModel
@@ -19,7 +19,14 @@ from models.user import (
     TokenType,
     UserTokenResponseModel,
     UserModel,
-    UserResponseModelBD
+    UserResponseModelBD,
+)
+
+from models.resource import ResourceInsertModel, ResourceModel, ResourceResponse
+from models.rol_resource import (
+    RolResourceInsertModel,
+    RolResourceResponse,
+    RolResourceModel,
 )
 
 __all__ = [
@@ -43,5 +50,11 @@ __all__ = [
     "RolResponseModel",
     "PersonInsertModel",
     "PersonModel",
-    "UserResponseModelBD"
+    "UserResponseModelBD",
+    "ResourceInsertModel",
+    "ResourceModel",
+    "ResourceResponse",
+    "RolResourceInsertModel",
+    "RolResourceResponse",
+    "RolResourceModel",
 ]

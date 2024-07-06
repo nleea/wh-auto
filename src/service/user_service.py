@@ -13,38 +13,56 @@ class UserService:
     ERROR_INVALID_CREDENTIALS = "Invalid credentials"
     ERROR_USER_NOT_FOUND = "User not found"
 
+    ERROR_SERVICE = "There was a erorr"
+
     @classmethod
     def create_user(cls, user: UserInsertModel) -> GenericResponseModel:
-        hasher = PasswordHasher()
+        try:
+            hasher = PasswordHasher()
 
-        person_to_insert = PersonInsertModel(
-            age=user.age,
-            name=user.name,
-            last_name=user.last_name,
-            phone_number=user.phone_number,
-            gender=user.gender,
-        )
+            person_to_insert = PersonInsertModel(
+                age=user.age,
+                name=user.name,
+                last_name=user.last_name,
+                phone_number=user.phone_number,
+                gender=user.gender,
+            )
 
-        person_create = Person.create_person(person_to_insert)
+            person_create = Person.create_person(person_to_insert)
 
-        hashed_password = hasher.hash_password(user.password)
-        user.person = person_create.id
-        user_to_create = user.create_db_entity(password_hash=hashed_password)
+            hashed_password = hasher.hash_password(user.password)
+            user.person = person_create.id
+            user_to_create = user.create_db_entity(password_hash=hashed_password)
 
-        user_data = User.create_user(user_to_create)
+            user_data = User.create_user(user_to_create)
 
-        return GenericResponseModel(
-            status_code=http.HTTPStatus.CREATED,
-            message=cls.MSG_USER_CREATED_SUCCESS,
-            data=user_data.build_response_model(),
-        )
+            return GenericResponseModel(
+                status_code=http.HTTPStatus.CREATED,
+                message=cls.MSG_USER_CREATED_SUCCESS,
+                data=user_data.build_response_model(),
+            )
+        except Exception as e:
+            return GenericResponseModel(
+                status_code=http.HTTPStatus.BAD_REQUEST,
+                message=cls.ERROR_SERVICE,
+                error=str(e),
+                data=None,
+            )
 
     @classmethod
     def list_user(cls) -> GenericResponseModel:
-        users = User.list_user()
+        try:
+            users = User.list_user()
 
-        return GenericResponseModel(
-            status_code=http.HTTPStatus.OK,
-            message=cls.MSG_USER_OK,
-            data=[x.build_response_model() for x in users],
-        )
+            return GenericResponseModel(
+                status_code=http.HTTPStatus.OK,
+                message=cls.MSG_USER_OK,
+                data=[x.build_response_model() for x in users],
+            )
+        except Exception as e:
+            return GenericResponseModel(
+                status_code=http.HTTPStatus.BAD_REQUEST,
+                message=cls.ERROR_SERVICE,
+                error=str(e),
+                data=None,
+            )

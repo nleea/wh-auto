@@ -23,7 +23,6 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=db_engine)
 
 UTC = timezone('UTC')
 
-
 def time_now():
     return datetime.now(UTC)
 

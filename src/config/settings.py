@@ -12,7 +12,10 @@ for key in list(os.environ.keys()):
 
 # Load env variables from a file, if exists else default would be set
 logger.info("SERVER_INIT::Setting environment variables from .env file(if exists)...")
-load_dotenv(verbose=True, dotenv_path=os.path.join(Path(__file__).parent.parent.parent,".env"))
+load_dotenv(
+    verbose=True, dotenv_path=os.path.join(Path(__file__).parent.parent.parent, ".env")
+)
+
 
 class DB:
     host = Environment.get_string("DB_HOST", "localhost")
@@ -26,5 +29,5 @@ class JWTToken:
     algorithm = Environment.get_string("JWT_ALGORITHM", "HS256")
     secret = Environment.get_string("JWT_SECRET", "secret")
     access_token_expire_minutes = Environment.get_string(
-        "JWT_ACCESS_TOKEN_EXPIRE_MINUTES", "86400"
+        "JWT_ACCESS_TOKEN_EXPIRE_MINUTES", "30"
     )
