@@ -53,3 +53,20 @@ class RolResourceService:
                 error=str(e),
                 data=None,
             )
+
+    @classmethod
+    def list_resources_by_rol(cls, rol: int):
+        try:
+            resource_by_rol = RolResources.list_resouce_by_rol(rol)
+            return GenericResponseModel(
+                status_code=http.HTTPStatus.OK,
+                message=cls.MSG_OK,
+                data=resource_by_rol,
+            )
+        except Exception as e:
+            return GenericResponseModel(
+                status_code=http.HTTPStatus.BAD_REQUEST,
+                message=cls.ERROR_SERVICE,
+                error=str(e),
+                data=None,
+            )

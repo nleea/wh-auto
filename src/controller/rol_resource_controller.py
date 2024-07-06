@@ -25,8 +25,8 @@ async def create_resource(
 
 
 @rol_resource_router.get(
-    "/list", status_code=http.HTTPStatus.OK, response_model=GenericResponseModel
+    "/{rol_id}", status_code=http.HTTPStatus.OK, response_model=GenericResponseModel
 )
-async def list_resources(_=Depends(build_request_context)):
-    response: GenericResponseModel = RolResourceService.list_rol_resources()
+async def list_resources(rol_id: int, _=Depends(build_request_context)):
+    response: GenericResponseModel = RolResourceService.list_resources_by_rol(rol_id)
     return response

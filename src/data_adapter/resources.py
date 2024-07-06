@@ -1,7 +1,7 @@
 from sqlalchemy import Column, String, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 from data_adapter.db import DBBase, DBBaseModel
-from models import ResourceModel, RolResourceModel
+from models import ResourceModel, RolResourceModel, ResourceResponse
 from data_adapter.base_tables import Rol
 from sqlalchemy.orm import joinedload
 
@@ -82,10 +82,14 @@ class RolResources(DBBase, DBBaseModel):
             db.query(Rol)
             .options(joinedload(Rol.rol_resources).joinedload(RolResources.resource))
             .filter(Rol.id == rol)
-            .one()
+            .one_or_none()
         )
+
+        if resouces_by_rol is None:
+            return []
+
         resources = [
             rol_resource.resource for rol_resource in resouces_by_rol.rol_resources
         ]
-        
-        return [ResourceModel.model_validate(x) for x in resources]
+
+        return [ResourceResponse.model_validate(x) for x in resources]
