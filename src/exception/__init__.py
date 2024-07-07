@@ -5,6 +5,7 @@ from exception.exception import (
     sql_data_exception_handler,
     sql_exception_handler,
     sql_integrity_exception_handler,
+    auth_exception_handlre
 )
 
 __all__ = [
@@ -14,4 +15,5 @@ __all__ = [
     "sql_data_exception_handler",
     "sql_exception_handler",
     "sql_integrity_exception_handler",
+    "auth_exception_handlre"
 ]

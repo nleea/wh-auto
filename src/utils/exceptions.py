@@ -7,10 +7,12 @@ class AppException(Exception):
         self.status_code = status_code
 
     def __str__(self):
-        return (
-            json.dumps({"exception_name": str(self.__class__.__name__),
-                        "exception_msg": self.message,
-                        "exception_status_code": self.status_code})
+        return json.dumps(
+            {
+                "exception_name": str(self.__class__.__name__),
+                "exception_msg": self.message,
+                "exception_status_code": self.status_code,
+            }
         )
 
 

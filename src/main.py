@@ -1,6 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.exceptions import FastAPIError
-from sqlalchemy.exc import ProgrammingError, DataError, IntegrityError
+from sqlalchemy.exc import ProgrammingError, DataError
 import uvicorn
 from exception import (
     pydantic_validation_exception_handler,
@@ -9,8 +9,9 @@ from exception import (
     sql_data_exception_handler,
     application_exception_handler,
     sql_exception_handler,
+    auth_exception_handlre,
 )
-from utils.exceptions import AppException
+from utils.exceptions import AppException, AuthException
 from pydantic import ValidationError
 from controller import (
     rol_router,
@@ -19,8 +20,12 @@ from controller import (
     auth_router,
     resource_router,
     rol_resource_router,
+    permissions_router,
+    rol_permission_router,
+    resource_permission_router
 )
 from middleware import ResponseMiddleware
+from utils.helpers import get_current_user
 
 app = FastAPI()
 
@@ -31,22 +36,25 @@ def main():
 
 
 """ Routes """
-app.include_router(user_router, prefix="")
-app.include_router(rol_router, prefix="")
-app.include_router(gender_router, prefix="")
+app.include_router(user_router, prefix="", dependencies=[Depends(get_current_user)])
+app.include_router(rol_router, prefix="", dependencies=[Depends(get_current_user)])
+app.include_router(gender_router, prefix="", dependencies=[Depends(get_current_user)])
 app.include_router(auth_router, prefix="")
-app.include_router(resource_router, prefix="")
-app.include_router(rol_resource_router, prefix="")
+app.include_router(resource_router, prefix="", dependencies=[Depends(get_current_user)])
+app.include_router(rol_resource_router, prefix="", dependencies=[Depends(get_current_user)])
+app.include_router(permissions_router, prefix="", dependencies=[Depends(get_current_user)])
+app.include_router(rol_permission_router, prefix="", dependencies=[Depends(get_current_user)])
+app.include_router(resource_permission_router, prefix="", dependencies=[Depends(get_current_user)])
 
 
 """ Exceptions  """
+app.add_exception_handler(AuthException, auth_exception_handlre)
 app.add_exception_handler(ValidationError, pydantic_validation_exception_handler)
 app.add_exception_handler(FastAPIError, fastapi_exception_handler)
 app.add_exception_handler(ProgrammingError, sql_exception_handler)
 app.add_exception_handler(DataError, sql_data_exception_handler)
 app.add_exception_handler(AppException, application_exception_handler)
 app.add_exception_handler(AppException, sql_integrity_exception_handler)
-
 
 """ Middlewares """
 app.add_middleware(ResponseMiddleware)

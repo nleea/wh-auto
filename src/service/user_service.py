@@ -1,6 +1,5 @@
 import http
 from models import GenericResponseModel, UserInsertModel, PersonInsertModel
-from utils import PasswordHasher
 from data_adapter import User, Person
 
 
@@ -18,6 +17,8 @@ class UserService:
     @classmethod
     def create_user(cls, user: UserInsertModel) -> GenericResponseModel:
         try:
+            from utils import PasswordHasher
+
             hasher = PasswordHasher()
 
             person_to_insert = PersonInsertModel(

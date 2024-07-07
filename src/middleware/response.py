@@ -2,6 +2,7 @@ from typing import Any
 from utils import build_api_response
 from starlette.middleware.base import BaseHTTPMiddleware
 import json
+from fastapi.responses import JSONResponse
 
 
 class ResponseMiddleware(BaseHTTPMiddleware):
@@ -9,13 +10,14 @@ class ResponseMiddleware(BaseHTTPMiddleware):
         super().__init__(app)
 
     async def dispatch(self, request, call_next) -> Any:
-        response = await call_next(request)
+        try:
+            response = await call_next(request)
+        except Exception as e:
+            return JSONResponse(
+                status_code=500,
+                content={"message": f"An internal server error occurred, {e}"},
+            )
         body = [section async for section in response.body_iterator]
         response_body = json.loads(b"".join(body))
-        
-        if response.status_code in [400,404,500]:
-            return build_api_response(
-                {"body": response_body, "status_code": response.status_code}
-            )
 
         return build_api_response(response_body)

@@ -5,10 +5,24 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from logger import logger
 from models.base import GenericResponseModel
+from fastapi.security import OAuth2PasswordBearer
+from typing import Annotated
+from fastapi import Depends
+from utils.jwt_handler import JWTHandler
 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 def build_api_response(generic_response: GenericResponseModel) -> JSONResponse:
-    from controller import context_api_id, context_log_meta
+    from controller.context_manager import context_api_id, context_log_meta
+    
+    if type(generic_response) == GenericResponseModel:
+        generic_response = {
+            "api_id": generic_response.api_id,
+            "status_code": generic_response.status_code,
+            "error": generic_response.error,
+            "message": generic_response.message,
+            "data": generic_response.data
+        }
     
     try:    
         if "detail" in generic_response:
@@ -55,3 +69,7 @@ def build_api_response(generic_response: GenericResponseModel) -> JSONResponse:
         return JSONResponse(
             status_code=generic_response.status_code, content=generic_response.error
         )
+
+
+async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
+    JWTHandler.decode_access_token(token)

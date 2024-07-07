@@ -40,7 +40,7 @@ async def build_request_context(request: Request,
         error_message = None
         if not user:
             error_message = "Invalid authentication credentials, user not found"
-        elif user.role != user_data_from_context.role:
+        elif user.rol.name_rol != user_data_from_context.role:
             error_message = "Invalid authentication credentials, user role mismatch"
         elif user.status != UserStatus.ACTIVE.value:
             error_message = "Invalid authentication credentials, user is not active"

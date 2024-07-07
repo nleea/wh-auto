@@ -37,7 +37,7 @@ class AuthService:
                     data={},
                 )
 
-            token = JWTHandler.create_access_token({"uuid": str(user.uuid)})
+            token = JWTHandler.create_access_token({"uuid": str(user.uuid), "role": user.rol.name_rol, "email": user.email})
 
             return GenericResponseModel(
                 message=cls.MSG_OK,

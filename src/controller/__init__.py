@@ -4,6 +4,9 @@ from controller.rol import rol_router
 from controller.auth_controller import auth_router
 from controller.resource_controller import resource_router
 from controller.rol_resource_controller import rol_resource_router
+from controller.permission_controller import permissions_router
+from controller.rol_permission_controller import rol_permission_router
+from controller.resource_permission_controller import resource_permission_router
 from controller.context_manager import (
     build_request_context,
     get_db_session,
@@ -30,4 +33,7 @@ __all__ = [
     "auth_router",
     "resource_router",
     "rol_resource_router",
+    "permissions_router",
+    "rol_permission_router",
+    "resource_permission_router"
 ]

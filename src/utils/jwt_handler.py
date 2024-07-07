@@ -1,7 +1,6 @@
 import jwt
 from datetime import timedelta, datetime
 from config.settings import JWTToken
-from controller import context_actor_user_data, context_log_meta
 from utils import AuthException
 from models import UserTokenData
 
@@ -36,6 +35,7 @@ class JWTHandler:
 
     @staticmethod
     def decode_access_token(token: str):
+        from controller import context_actor_user_data, context_log_meta
         """
         Decode the access token and set the user data in context
         :param token:   access token
