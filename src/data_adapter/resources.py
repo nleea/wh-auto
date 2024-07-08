@@ -15,8 +15,9 @@ class Resources(DBBase, DBBaseModel):
     name = Column(String(255), nullable=True)
     parent_id = Column(Integer, ForeignKey("resources.id"), nullable=True)
     children = relationship("Resources", backref="parent", remote_side=[id])
+
     rol_resources = relationship("RolResources", back_populates="resource")
-    permission_resources = relationship("ResourcePermission", back_populates="resource")
+    resource_permission = relationship("ResourcePermission", back_populates="resource")
 
     def __to_model(self) -> ResourceModel:
         """converts db orm object to pydantic model"""

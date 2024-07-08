@@ -20,7 +20,7 @@ class RolPermissionInsertModel(BaseModel):
     permission: int
 
     def create_db_entity(self):
-        from data_adapter import ResourcePermission
+        from data_adapter import RolPermission
 
         dict_to_build_db_entity = self.model_dump()
         dict_to_build_db_entity["rol_id"] = self.rol
@@ -29,7 +29,7 @@ class RolPermissionInsertModel(BaseModel):
         del dict_to_build_db_entity["rol"]
         del dict_to_build_db_entity["permission"]
 
-        return ResourcePermission(**dict_to_build_db_entity)
+        return RolPermission(**dict_to_build_db_entity)
 
 
 class RolPermissionModel(DBBaseModel):

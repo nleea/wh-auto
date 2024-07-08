@@ -20,8 +20,12 @@ class RolPermissionService:
     ) -> GenericResponseModel:
 
         try:
+            print(rol_permission)
             rol_permission_to_create = rol_permission.create_db_entity()
+            print(rol_permission_to_create)
             rol_permission_data = RolPermission.create_rol_permission(rol_permission_to_create)
+
+            print(rol_permission_data)
 
             return GenericResponseModel(
                 status_code=http.HTTPStatus.CREATED,

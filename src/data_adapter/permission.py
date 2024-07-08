@@ -9,7 +9,6 @@ from models import (
     ResourceResponse
 )
 from data_adapter.base_tables import Rol
-from data_adapter.resources import Resources
 from sqlalchemy.orm import joinedload
 
 
@@ -19,6 +18,7 @@ class Permission(DBBase, DBBaseModel):
 
     name = Column(String(255), nullable=True)
     rol_permissions = relationship("RolPermission", back_populates="permission")
+    resource_permission = relationship("ResourcePermission", back_populates="permission")
 
     def __to_model(self) -> PermissionModel:
         """converts db orm object to pydantic model"""
@@ -106,10 +106,10 @@ class ResourcePermission(DBBase, DBBaseModel):
     __tablename__ = "resource_permissions"
 
     permission_id = Column(Integer, ForeignKey("permissions.id"))
-    permission = relationship("Permission")
+    permission = relationship("Permission", back_populates="resource_permission")
 
     resource_id = Column(Integer, ForeignKey("resources.id"))
-    resource = relationship("Resources")
+    resource = relationship("Resources", back_populates="resource_permission")
 
     def __to_model(self) -> ResourcePermissionModel:
         """converts db orm object to pydantic model"""
@@ -140,11 +140,11 @@ class ResourcePermission(DBBase, DBBaseModel):
         db = get_db_session()
 
         permission_by_resource = (
-            db.query(Rol)
+            db.query(Permission)
             .options(
-                joinedload(Resources.permission_resources).joinedload(ResourcePermission.resource)
+                joinedload(Permission.resource_permission).joinedload(ResourcePermission.resource)
             )
-            .filter(Resources.id == resource)
+            .filter(Permission.id == resource)
             .one_or_none()
         )
 
@@ -153,7 +153,7 @@ class ResourcePermission(DBBase, DBBaseModel):
 
         resources = [
             resource_permission.resource
-            for resource_permission in permission_by_resource.permission_resources
+            for resource_permission in permission_by_resource.resource_permission
         ]
 
         return [ResourceResponse.model_validate(x) for x in resources]

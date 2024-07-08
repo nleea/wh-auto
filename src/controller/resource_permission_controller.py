@@ -33,8 +33,8 @@ async def create_resource_permission(
     status_code=http.HTTPStatus.OK,
     response_model=GenericResponseModel,
 )
-async def list_resource_permission(rol_id: int, _=Depends(build_request_context)):
+async def list_resource_permission(resource_id: int, _=Depends(build_request_context)):
     response: GenericResponseModel = (
-        ResourcePermissionService.list_permission_by_resource(rol_id)
+        ResourcePermissionService.list_permission_by_resource(resource_id)
     )
     return response
