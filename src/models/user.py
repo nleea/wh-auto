@@ -29,7 +29,7 @@ class UserTokenData(BaseModel):
     """User token data"""
 
     uuid: str
-    role: UserRole
+    role: str
     email: EmailStr
 
 

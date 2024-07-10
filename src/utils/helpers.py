@@ -6,9 +6,10 @@ from fastapi.responses import JSONResponse
 from logger import logger
 from models.base import GenericResponseModel
 from fastapi.security import OAuth2PasswordBearer
-from typing import Annotated
-from fastapi import Depends
+from typing import Annotated, Any
+from fastapi import Depends, Request
 from utils.jwt_handler import JWTHandler
+from sqlalchemy import and_
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -73,3 +74,54 @@ def build_api_response(generic_response: GenericResponseModel) -> JSONResponse:
 
 async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     JWTHandler.decode_access_token(token)
+
+class Check:
+
+    def __init__(self, resource) -> None:
+        self.resource = resource    
+
+    def get_role_with_permissions_and_resources(self, user_rol: str, permission_name: str,resource_name: str ):
+
+            from controller.context_manager import get_db_session
+            from data_adapter.base_tables import Rol
+            from data_adapter.resources import RolResources
+            from data_adapter.permission import RolPermission
+            
+            db = get_db_session()
+
+            rol = db.query(Rol).filter(
+                and_(
+                Rol.name_rol == user_rol,
+                Rol.rol_permissions.any(RolPermission.permission.has(name=permission_name)),
+                Rol.rol_resources.any(RolResources.resource.has(name=resource_name))
+            )
+                ).one_or_none()
+
+            return rol is not None
+    
+    def __call__(self, request: Request) -> Any:
+        from utils.exceptions import AppException
+        try:
+            from controller.context_manager import context_actor_user_data
+
+            user_context = context_actor_user_data.get()
+
+            if user_context.role == "admin":
+                return
+
+            required_permission = request.get("path").split("/")[-1]
+
+            if request.get("path_params"):
+                required_permission = request.get("path").split("/")[-2]
+
+            has_permission_and_resource = self.get_role_with_permissions_and_resources(
+                user_rol=user_context.role, 
+                permission_name=required_permission, 
+                resource_name=self.resource
+            )
+
+            if not has_permission_and_resource:
+                raise AppException(401,"you don't have the permission for do this action")
+        except AppException:
+            raise AppException(401,"you don't have the permission for do this action")
+        

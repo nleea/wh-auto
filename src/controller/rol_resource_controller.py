@@ -6,8 +6,10 @@ from controller.context_manager import build_request_context
 from models.base import GenericResponseModel
 from models import RolResourceInsertModel
 from service.rol_resource_service import RolResourceService
+from utils.helpers import Check
 
 rol_resource_router = APIRouter(prefix="/v1/rol/resource", tags=["rol-resource"])
+RESOURCE = "rol_resource"
 
 
 @rol_resource_router.post(
@@ -25,8 +27,13 @@ async def create_resource(
 
 
 @rol_resource_router.get(
-    "/{rol_id}", status_code=http.HTTPStatus.OK, response_model=GenericResponseModel
+    "/by/{rol_id}",
+    status_code=http.HTTPStatus.OK,
+    response_model=GenericResponseModel,
+    dependencies=[Depends(build_request_context), Depends(Check(RESOURCE))],
 )
-async def list_resources(rol_id: int, _=Depends(build_request_context)):
+async def rol_resource(
+    rol_id: int,
+):
     response: GenericResponseModel = RolResourceService.list_resources_by_rol(rol_id)
     return response
