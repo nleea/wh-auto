@@ -19,7 +19,7 @@ RESOURCE = "rol_resource"
     response_model=GenericResponseModel,
     dependencies=[Depends(build_request_context), Depends(Check(RESOURCE, True))],
 )
-@limiter.limit("5/minutes")
+@limiter.limit("10/minutes")
 async def rol_resource_create(request: Request,resource: RolResourceInsertModel):
     response: GenericResponseModel = RolResourceService.create_rol_resource(
         resource=resource
@@ -33,7 +33,7 @@ async def rol_resource_create(request: Request,resource: RolResourceInsertModel)
     response_model=GenericResponseModel,
     dependencies=[Depends(build_request_context), Depends(Check(RESOURCE, True))],
 )
-@limiter.limit("5/minutes")
+@limiter.limit("10/minutes")
 async def rol_resource(
     request: Request,
     rol_id: int,
