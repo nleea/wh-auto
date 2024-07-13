@@ -36,7 +36,7 @@ async def build_request_context(request: Request,
     # fetch the token from context and check if the user is active or not
     user_data_from_context: UserTokenData = context_actor_user_data.get()
     if user_data_from_context:
-        user: UserModel = User.get_by_uuid(user_data_from_context.uuid)
+        user = User.get_by_uuid(user_data_from_context.uuid)
         error_message = None
         if not user:
             error_message = "Invalid authentication credentials, user not found"

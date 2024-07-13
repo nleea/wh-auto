@@ -5,7 +5,6 @@ import uvicorn
 from exception import (
     pydantic_validation_exception_handler,
     fastapi_exception_handler,
-    sql_integrity_exception_handler,
     sql_data_exception_handler,
     application_exception_handler,
     sql_exception_handler,
@@ -54,7 +53,6 @@ app.add_exception_handler(FastAPIError, fastapi_exception_handler)
 app.add_exception_handler(ProgrammingError, sql_exception_handler)
 app.add_exception_handler(DataError, sql_data_exception_handler)
 app.add_exception_handler(AppException, application_exception_handler)
-app.add_exception_handler(AppException, sql_integrity_exception_handler)
 
 """ Middlewares """
 app.add_middleware(ResponseMiddleware)

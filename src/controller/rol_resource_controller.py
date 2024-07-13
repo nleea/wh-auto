@@ -16,10 +16,9 @@ RESOURCE = "rol_resource"
     "/create",
     status_code=http.HTTPStatus.CREATED,
     response_model=GenericResponseModel,
+    dependencies=[Depends(build_request_context), Depends(Check(RESOURCE, True))],
 )
-async def create_resource(
-    resource: RolResourceInsertModel, _=Depends(build_request_context)
-):
+async def rol_resource_create(resource: RolResourceInsertModel):
     response: GenericResponseModel = RolResourceService.create_rol_resource(
         resource=resource
     )
@@ -30,7 +29,7 @@ async def create_resource(
     "/by/{rol_id}",
     status_code=http.HTTPStatus.OK,
     response_model=GenericResponseModel,
-    dependencies=[Depends(build_request_context), Depends(Check(RESOURCE))],
+    dependencies=[Depends(build_request_context), Depends(Check(RESOURCE, True))],
 )
 async def rol_resource(
     rol_id: int,

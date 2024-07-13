@@ -16,7 +16,7 @@ RESOURCE = "permission"
     "/create",
     status_code=http.HTTPStatus.CREATED,
     response_model=GenericResponseModel,
-    dependencies=[Depends(build_request_context), Depends(Check(RESOURCE))],
+    dependencies=[Depends(build_request_context), Depends(Check(RESOURCE, True))],
 )
 async def create_resource(permission: PermissionsInsertModel):
     response: GenericResponseModel = PermissionService.create_permission(
@@ -29,7 +29,7 @@ async def create_resource(permission: PermissionsInsertModel):
     "/list",
     status_code=http.HTTPStatus.OK,
     response_model=GenericResponseModel,
-    dependencies=[Depends(build_request_context), Depends(Check(RESOURCE))],
+    dependencies=[Depends(build_request_context), Depends(Check(RESOURCE, True))],
 )
 async def list_resources():
     response: GenericResponseModel = PermissionService.list_permissions()

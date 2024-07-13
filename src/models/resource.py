@@ -5,9 +5,10 @@ from typing import Optional
 class ResourceResponse(BaseModel):
     """Response Resource Model"""
     id: Optional[int]
-    path: str
-    name: str
+    path: Optional[str]
+    name: Optional[str]
     parent_id: int | None = None
+    resource: Optional[str]
     
     class Config:
         from_attributes = True
@@ -16,9 +17,11 @@ class ResourceResponse(BaseModel):
 class ResourceInsertModel(BaseModel):
     """Resource insert model"""
 
-    path: str
-    name: str
+    path: Optional[str]
+    name: Optional[str]
     parent_id: int | None = None
+    resource: Optional[str]
+    is_visible: Optional[bool]
 
     def create_db_entity(self):
         from data_adapter import Resources
@@ -30,9 +33,10 @@ class ResourceInsertModel(BaseModel):
 class ResourceModel(DBBaseModel):
     """Resource Model"""
 
-    path: str
-    name: str
+    path: Optional[str]
+    name: Optional[str]
     parent_id: int | None = None
+    resource: Optional[str]
 
     class Config:
         from_attributes = True

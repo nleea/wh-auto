@@ -77,8 +77,9 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
 
 class Check:
 
-    def __init__(self, resource) -> None:
-        self.resource = resource    
+    def __init__(self, resource,resource_permission = False) -> None:
+        self.resource = resource
+        self.resource_permission = resource_permission
 
     def get_role_with_permissions_and_resources(self, user_rol: str, permission_name: str,resource_name: str ):
 
@@ -86,22 +87,30 @@ class Check:
             from data_adapter.base_tables import Rol
             from data_adapter.resources import RolResources
             from data_adapter.permission import RolPermission
-            
+
             db = get_db_session()
+
+            name_resource = resource_name
+
+            if self.resource_permission:
+                name_resource = f"{resource_name}:{permission_name}"
 
             rol = db.query(Rol).filter(
                 and_(
                 Rol.name_rol == user_rol,
                 Rol.rol_permissions.any(RolPermission.permission.has(name=permission_name)),
-                Rol.rol_resources.any(RolResources.resource.has(name=resource_name))
+                Rol.rol_resources.any(RolResources.resource.has(resource=name_resource))
             )
                 ).one_or_none()
 
             return rol is not None
-    
+
+
     def __call__(self, request: Request) -> Any:
         from utils.exceptions import AppException
+
         try:
+
             from controller.context_manager import context_actor_user_data
 
             user_context = context_actor_user_data.get()

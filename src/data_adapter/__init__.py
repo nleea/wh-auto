@@ -14,3 +14,6 @@ __all__ = [
     "RolPermission",
     "ResourcePermission",
 ]
+
+
+from data_adapter.signals.resource_signals import *

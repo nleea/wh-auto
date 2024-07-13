@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, ForeignKey
+from sqlalchemy import Column, String, Integer, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 from data_adapter.db import DBBase, DBBaseModel
 from models import ResourceModel, RolResourceModel, ResourceResponse
@@ -11,8 +11,10 @@ class Resources(DBBase, DBBaseModel):
     __tablename__ = "resources"
 
     id = Column(Integer, primary_key=True, unique=True, autoincrement=True)
-    path = Column(String(255), unique=True, nullable=False)
+    path = Column(String(255), unique=True, nullable=True)
+    resource = Column(String(255), nullable=True)
     name = Column(String(255), nullable=True)
+    is_visible = Column(Boolean(True), default=True)
     parent_id = Column(Integer, ForeignKey("resources.id"), nullable=True)
     children = relationship("Resources", backref="parent", remote_side=[id])
 
@@ -38,7 +40,7 @@ class Resources(DBBase, DBBaseModel):
         from controller import get_db_session
 
         db = get_db_session()
-        resources = db.query(cls).all()
+        resources = db.query(cls).filter(cls.is_visible == True).all()
         return [x.__to_model() for x in resources]
 
 
@@ -80,18 +82,15 @@ class RolResources(DBBase, DBBaseModel):
 
         db = get_db_session()
 
-        resouces_by_rol = (
-            db.query(Rol)
-            .options(joinedload(Rol.rol_resources).joinedload(RolResources.resource))
-            .filter(Rol.id == rol)
-            .one_or_none()
+        resources_by_rol = (
+            db.query(Resources)
+            .join(RolResources)
+            .join(Rol)
+            .filter(Rol.id == rol, Resources.is_visible == True)
+            .all()
         )
 
-        if resouces_by_rol is None:
+        if resources_by_rol is None:
             return []
 
-        resources = [
-            rol_resource.resource for rol_resource in resouces_by_rol.rol_resources
-        ]
-
-        return [ResourceResponse.model_validate(x) for x in resources]
+        return [ResourceResponse.model_validate(x) for x in resources_by_rol]

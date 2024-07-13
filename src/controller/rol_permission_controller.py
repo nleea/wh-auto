@@ -16,7 +16,7 @@ RESOURCE = "rol_permission"
     "/create",
     status_code=http.HTTPStatus.CREATED,
     response_model=GenericResponseModel,
-    dependencies=[Depends(build_request_context), Depends(Check(RESOURCE))],
+    dependencies=[Depends(build_request_context), Depends(Check(RESOURCE, True))],
 )
 async def create_rol_permission(rol_permission: RolPermissionInsertModel):
     response: GenericResponseModel = RolPermissionService.create_rol_permission(
@@ -29,7 +29,7 @@ async def create_rol_permission(rol_permission: RolPermissionInsertModel):
     "/by/{rol_id}",
     status_code=http.HTTPStatus.OK,
     response_model=GenericResponseModel,
-    dependencies=[Depends(build_request_context), Depends(Check(RESOURCE))],
+    dependencies=[Depends(build_request_context), Depends(Check(RESOURCE, True))],
 )
 async def list_rol_permission(rol_id: int):
     response: GenericResponseModel = RolPermissionService.list_permission_by_rol(rol_id)

@@ -11,12 +11,14 @@ from utils.helpers import Check
 user_router = APIRouter(prefix="/v1/user", tags=["user"])
 RESOURCE = "user"
 
+
 @user_router.post(
     "/register",
     status_code=http.HTTPStatus.CREATED,
     response_model=GenericResponseModel,
+    dependencies=[Depends(build_request_context), Depends(Check(RESOURCE, True))],
 )
-async def register_user(user: UserInsertModel, _=[Depends(build_request_context)]):
+async def register_user(user: UserInsertModel):
     response: GenericResponseModel = UserService.create_user(user=user)
     return response
 
@@ -25,7 +27,7 @@ async def register_user(user: UserInsertModel, _=[Depends(build_request_context)
     "/list",
     status_code=http.HTTPStatus.OK,
     response_model=GenericResponseModel,
-    dependencies=[Depends(build_request_context), Depends(Check(RESOURCE))],
+    dependencies=[Depends(build_request_context), Depends(Check(RESOURCE, True))],
 )
 async def user_list():
     response: GenericResponseModel = UserService.list_user()

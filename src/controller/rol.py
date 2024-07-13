@@ -10,14 +10,14 @@ from utils.helpers import Check
 
 rol_router = APIRouter(prefix="/v1/rol", tags=["rol"])
 
-RESOURCE = "roles"
+RESOURCE = "rol"
 
 
 @rol_router.post(
     "/create",
     status_code=http.HTTPStatus.CREATED,
     response_model=GenericResponseModel,
-    dependencies=[Depends(build_request_context), Depends(Check(RESOURCE))],
+    dependencies=[Depends(build_request_context), Depends(Check(RESOURCE, True))],
 )
 async def create_rol(rol: RolInsertModel):
     response: GenericResponseModel = RolService.create_rol(rol=rol)
@@ -28,7 +28,7 @@ async def create_rol(rol: RolInsertModel):
     "/list",
     status_code=http.HTTPStatus.OK,
     response_model=GenericResponseModel,
-    dependencies=[Depends(build_request_context), Depends(Check(RESOURCE))],
+    dependencies=[Depends(build_request_context), Depends(Check(RESOURCE, True))],
 )
 async def list_rol():
     response: GenericResponseModel = RolService.list_rol()

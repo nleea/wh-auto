@@ -16,7 +16,7 @@ RESOURCE = "gender"
     "/create",
     status_code=http.HTTPStatus.CREATED,
     response_model=GenericResponseModel,
-    dependencies=[Depends(build_request_context), Depends(Check(RESOURCE))],
+    dependencies=[Depends(build_request_context), Depends(Check(RESOURCE, True))],
 )
 async def create_gender(gender: GenderInsertModel):
     response: GenericResponseModel = GenderService.create_gender(gender=gender)

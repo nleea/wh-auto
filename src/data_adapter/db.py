@@ -46,6 +46,7 @@ def get_db():
         #  rollback the db session if any exception occurs
         logging.error(e)
         db.rollback()
+        raise e
     finally:
         #  close the db session
         db.close()
