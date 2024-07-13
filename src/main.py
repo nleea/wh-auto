@@ -25,9 +25,15 @@ from controller import (
 )
 from middleware import ResponseMiddleware
 from utils.helpers import get_current_user
+from fastapi.middleware.gzip import GZipMiddleware
+from fastapi.middleware.cors import CORSMiddleware
+from config.settings import origins
+from config.limiter import limiter
+from slowapi.middleware import SlowAPIMiddleware
 
-app = FastAPI()
 
+app = FastAPI(root_path="/api/v1")
+app.state.limiter = limiter
 
 @app.get("/")
 def main():
@@ -56,7 +62,15 @@ app.add_exception_handler(AppException, application_exception_handler)
 
 """ Middlewares """
 app.add_middleware(ResponseMiddleware)
-
+app.middleware(GZipMiddleware(app,minimum_size=1000))
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+app.add_middleware(SlowAPIMiddleware)
 
 if __name__ == "__main__":
     uvicorn.run(

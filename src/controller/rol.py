@@ -1,12 +1,13 @@
 import http
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 
 from controller.context_manager import build_request_context
 from models.base import GenericResponseModel
 from models.base_model import RolInsertModel
 from service.rol_service import RolService
 from utils.helpers import Check
+from config.limiter import limiter
 
 rol_router = APIRouter(prefix="/v1/rol", tags=["rol"])
 
@@ -19,7 +20,8 @@ RESOURCE = "rol"
     response_model=GenericResponseModel,
     dependencies=[Depends(build_request_context), Depends(Check(RESOURCE, True))],
 )
-async def create_rol(rol: RolInsertModel):
+@limiter.limit("5/minutes")
+async def create_rol(request: Request, rol: RolInsertModel):
     response: GenericResponseModel = RolService.create_rol(rol=rol)
     return response
 
@@ -30,6 +32,7 @@ async def create_rol(rol: RolInsertModel):
     response_model=GenericResponseModel,
     dependencies=[Depends(build_request_context), Depends(Check(RESOURCE, True))],
 )
-async def list_rol():
+@limiter.limit("5/minutes")
+async def list_rol(request: Request):
     response: GenericResponseModel = RolService.list_rol()
     return response

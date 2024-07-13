@@ -1,6 +1,26 @@
 name: autoapp
 
 services:
+  wh:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: autoapp
+      DB_USER: autoapp
+      DB_PASS: autoapp
+      settings: dev
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    volumes:
+      - ../src:/app/
+    networks:
+      - postgres-network
+
   db:
     image: postgres:latest
     restart: always

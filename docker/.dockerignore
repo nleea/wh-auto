@@ -1,0 +1,7 @@
+test/
+.env
+.gitignore
+Pipfile
+setup.sh
+log
+.github

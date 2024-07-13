@@ -1,12 +1,13 @@
 import http
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 
 from controller.context_manager import build_request_context
 from models.base import GenericResponseModel
 from models import ResourcePermissionInsertModel
 from service.resource_permission import ResourcePermissionService
 from utils.helpers import Check
+from config.limiter import limiter
 
 resource_permission_router = APIRouter(
     prefix="/v1/resource/permission", tags=["resource-permission"]
@@ -21,7 +22,9 @@ RESOURCE = "resource_permission"
     response_model=GenericResponseModel,
     dependencies=[Depends(build_request_context), Depends(Check(RESOURCE, True))],
 )
+@limiter.limit("5/minutes")
 async def create_resource_permission(
+    request: Request,
     resource_permission: ResourcePermissionInsertModel,
 ):
     response: GenericResponseModel = (
@@ -38,7 +41,8 @@ async def create_resource_permission(
     response_model=GenericResponseModel,
     dependencies=[Depends(build_request_context), Depends(Check(RESOURCE, True))],
 )
-async def list_resource_permission(resource_id: int):
+@limiter.limit("5/minutes")
+async def list_resource_permission(request: Request, resource_id: int):
     response: GenericResponseModel = (
         ResourcePermissionService.list_permission_by_resource(resource_id)
     )

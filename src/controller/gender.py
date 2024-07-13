@@ -1,12 +1,13 @@
 import http
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 
 from controller.context_manager import build_request_context
 from models.base import GenericResponseModel
 from models.base_model import GenderInsertModel
 from service.gender_service import GenderService
 from utils.helpers import Check
+from config.limiter import limiter
 
 gender_router = APIRouter(prefix="/v1/gender", tags=["gender"])
 RESOURCE = "gender"
@@ -18,7 +19,8 @@ RESOURCE = "gender"
     response_model=GenericResponseModel,
     dependencies=[Depends(build_request_context), Depends(Check(RESOURCE, True))],
 )
-async def create_gender(gender: GenderInsertModel):
+@limiter.limit("5/minutes")
+async def create_gender(request: Request, gender: GenderInsertModel):
     response: GenericResponseModel = GenderService.create_gender(gender=gender)
     return response
 
@@ -29,6 +31,7 @@ async def create_gender(gender: GenderInsertModel):
     response_model=GenericResponseModel,
     dependencies=[Depends(build_request_context), Depends(Check(RESOURCE))],
 )
-async def list_gender():
+@limiter.limit("5/minutes")
+async def list_gender(request: Request):
     response: GenericResponseModel = GenderService.list_gender()
     return response
