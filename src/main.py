@@ -35,10 +35,6 @@ from slowapi.middleware import SlowAPIMiddleware
 app = FastAPI(root_path="/api/v1")
 app.state.limiter = limiter
 
-@app.get("/")
-def main():
-    return "Ok"
-
 
 """ Routes """
 app.include_router(user_router, prefix="", dependencies=[Depends(get_current_user)])
